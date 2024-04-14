@@ -1,8 +1,26 @@
+
+const $library = document.getElementById('pokemon-library');
+const $load = document.getElementById('load');
+const $list = document.getElementById('pokemon-list');
+let $next = ""; //store the next url
 // test out API first 
 // https://pokeapi.co/api/v2/Pokemon/?offset=20&limit=20
 const test = fetch("https://pokeapi.co/api/v2/berry/?/offset=20&limit=20")
 .then(response=>response.json())
-.then(data=>displayPokemon(data.results)) // TODO load more needs to be done here
+.then(data=>{displayPokemon(data.results);
+    $next = data.next;
+    $load.addEventListener('click', function(e){
+    e.preventDefault();
+    // console.log("load button is clicked");
+    // next url is contained in the response 
+    const nextBatch = fetch($next) // DONE store and update this parameter 
+    .then(response =>response.json())
+    .then(data=>{displayPokemon(data.results);
+
+        $next = data.next; // update the next url
+    }); // DONE repeatedly load more
+})})
+
 .catch(error => console.error('Error fetching data:', error)); // give error feedback 
 
 
@@ -11,10 +29,6 @@ const test = fetch("https://pokeapi.co/api/v2/berry/?/offset=20&limit=20")
 // DONE // with json data, parse url
 // DONE // with parsed url, get sprites 
 // reading results from a promise returned by API :https://www.freecodecamp.org/news/the-javascript-promises-handbook
-
-const $library = document.getElementById('pokemon-library');
-const $load = document.getElementById('load');
-const $list = document.getElementById('pokemon-list');
 
 // emulate react framework with custom function from lecture 
 function createElement(type,props,...children){
@@ -37,38 +51,30 @@ function displayPokemon(input)   {
         // pokemon face 
         const $sprite = createElement('img', {
             className: 'pokemon-sprite',
-            src: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${parseUrl(p.url)}.png`
+            src: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${parseUrl(p.url)}.png` ,
+            alt: p.name // improve accessibility
+        
         });// insert smaller thumbnail according to pokemon id
-
-
-            // <div class="pokemon col-6 col-md-4 col-lg-3">
-            //     <!-- Your Pokémon content goes here -->
-            //     <img src="pokemon-image.jpg" class="pokemon-image" alt="Pokemon Image">
-            //     <p class="pokemon-name">Pokemon Name</p>
-            // </div>
+        $sprite.classList.add('figure-img','img-fluid' ,'rounded' )
         // pokemon name 
-        const $name = createElement('p', {className:'pokemon-name'}, p.name);
+        const $name = createElement('caption', {className:'pokemon-name'}, p.name);
+        $name.classList.add('text-center','figure-caption')
         // put face and pokemon in display box 
-        const $box = createElement('div', {className :'pokemon-box'}, $sprite, $name);
+        const $box = createElement('figure', {className :'pokemon-box'}, $sprite, $name);
         // add id of pokemon to box 
-        $box.classList.add(parseUrl(p.url), 'col-6', 'col-md-4', 'col-lg-3', 'justify-content-center', 'align-content-center');
+        $box.classList.add(parseUrl(p.url), 'col-6', 'col-md-4', 'col-lg-3', 'justify-content-center', 'align-content-center','figure');
         // add box to library 
         $library.append($box);
-        console.log("one pokemon added")
+        // console.log("one pokemon added")
 
     }
 };
 
-    // dynamic for counts of pokemon    // dynamic for screensize 
+// dynamic for counts of pokemon    // dynamic for screensize 
 
 
-// TODO // load more : add 20 pokemon
 
-// // add event listening
-$load.addEventListener('click', async function(){
-    // make a fetch request
-    // display 
-})
+
 
 // TODO// show detail
 
