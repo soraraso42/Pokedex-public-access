@@ -97,7 +97,8 @@ function displayPokemon(input)   {
 // if tempArr is empty fetch from beginning
 // else display from tempArr 
 if (tempArr.length == 0)
-    {fetch("https://pokeapi.co/api/v2/berry/?/offset=20&limit=20")
+    {fetch("https://pokeapi.co/api/v2/pokemon/?offset=0&limit=20")
+    // {fetch("https://pokeapi.co/api/v2/berry/?/offset=20&limit=20") // FIXED this retrieves berry, NOT pokemons 
     .then(response=>response.json())
     // .then(data =>console.log(data))
     .then(data=>{
@@ -123,19 +124,21 @@ if (tempArr.length == 0)
 else{
 
     displayPokemon(tempArr);
+    // save this next url to local
     
     // listen for user click on load more btn
     $load.addEventListener('click', function(e){
         e.preventDefault();
-        // console.log("load button is clicked");
+        console.log("load button is clicked");
         // next url is from local Storage
         $next = localStorage.getItem('next')
+        console.log(`the click event receives ${$next}`)
+        debugger
         const nextBatch = fetch($next) 
         .then(response =>response.json())
         .then(data=>{displayPokemon(data.results);
         $next = data.next; // update the next url
-        localStorage.setItem('next',$next) // store updated value to localø
-        console.log(`updated next ${$next}`)
+        localStorage.setItem('next',$next) // store updated value to local
 }); // repeatedly load more
 })
 }
