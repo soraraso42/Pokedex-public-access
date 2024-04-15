@@ -72,11 +72,12 @@ function displayPokemon(input)   {
         // put face and pokemon in display box 
         const $box = createElement('figure', {className :parseUrl(p.url), id:p.name}, $sprite, $name); // ensure first element of classList is always id
         // because of the - in attribute names, cannot add directly with createElement()
-        $box.setAttribute('data-bs-toggle', 'modal');
+        // $box.setAttribute('data-bs-toggle', 'modal');
         $box.setAttribute('data-bs-target', '#detailBox');
         $box.classList.add('pokemon-box', 'col-6', 'col-md-4', 'col-lg-3', 'justify-content-center', 'text-center','figure','pokemon');
         // using toggle modal of bootstrap
-        $box.setAttribute('data-toggle', 'modal'); // data-bs-toggle did not work???
+        // $box.setAttribute('data-toggle', 'modal'); // data-bs-toggle did not work??? IS CAUSING ERROR 
+        $box.setAttribute('data-toggle', 'modal'); // data-bs-toggle did not work??? IS CAUSING ERROR 
         $box.setAttribute('data-target', '#detailBox');
         // add box to library 
         $library.append($box);
