@@ -4,15 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pokedex</title>
-    <script src="./script.js" defer></script>
+    <script src="./scriptLocal.js" defer></script>
     <!-- use bootstrap for styling  -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" >
 
 </head>
 <body>
     
-    <header class="h2">Pokemon!</header>
-    
+    <header class="h2 text-center m-auto">Pokemon!</header>
+
+    <!-- using bootstrap modal to display-->
+    <div class="modal" id="pokemonModal" tabindex="-1" aria-labelledby="pokemonModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="pokemonModalLabel"></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="modalContent">
+          <!-- Pokemon details will be inserted here dynamically -->
+        </div>
+      </div>
+    </div>
+    </div>
+  
     <div class="row ps-2">
         <section class="pokemon-list col-2" id="pokemon-list">Caught Pokemons</section>
         <main class="pokemon-library col-10 d-inline-flex flex-wrap" id="pokemon-library">
