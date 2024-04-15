@@ -62,23 +62,27 @@ function displayPokemon(input)   {
         const $sprite = createElement('img', {
             className: 'pokemon-sprite',
             src: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${parseUrl(p.url)}.png` ,
-            alt: ` thumbnail for ${p.name} `// improve accessibility
-        
+            alt: ` thumbnail for ${p.name} `,// improve accessibility
         });// insert smaller thumbnail according to pokemon id
         $sprite.classList.add('figure-img','img-fluid' ,'rounded' ,'pokemon')
+        // // add caught alert // default hidden with d-none
+        const $caughtBanner = createElement('span',{className:'caught'},"CAUGHT")
+        $caughtBanner.classList.add('d-none','position-absolute','top-0',  'start-100', 'translate-middle', 'badge', 'rounded-pill' ,'bg-danger','text-sm')
+        const $spriteContainer = createElement('div', 
+        {className:'spriteContainer',
+        
+        }, $sprite,$caughtBanner)
+        $spriteContainer.classList.add('position-relative')
         // pokemon name 
         const $name = createElement('caption', {className:'pokemon-name'}, p.name);
         $name.classList.add('text-center','figure-caption','pokemon') // TODO text-center class is added but not taking effect 
         // put face and pokemon in display box 
-        const $box = createElement('figure', {className :parseUrl(p.url), id:p.name}, $sprite, $name); // ensure first element of classList is always id
+        const $box = createElement('figure', {className :parseUrl(p.url), id:p.name}, $spriteContainer, $name); // ensure first element of classList is always id
         // because of the - in attribute names, cannot add directly with createElement()
-        // $box.setAttribute('data-bs-toggle', 'modal');
+        // $box.setAttribute('data-bs-toggle', 'modal'); // DEL this cause backdrop typeError 
         $box.setAttribute('data-bs-target', '#detailBox');
         $box.classList.add('pokemon-box', 'col-6', 'col-md-4', 'col-lg-3', 'justify-content-center', 'text-center','figure','pokemon');
-        // using toggle modal of bootstrap
-        // $box.setAttribute('data-toggle', 'modal'); // data-bs-toggle did not work??? IS CAUSING ERROR 
-        $box.setAttribute('data-toggle', 'modal'); // data-bs-toggle did not work??? IS CAUSING ERROR 
-        $box.setAttribute('data-target', '#detailBox');
+       
         // add box to library 
         $library.append($box);
         // console.log(" pokemon added")
