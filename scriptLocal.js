@@ -376,11 +376,11 @@ $library.addEventListener("click", async function (e) {
 
     let isCaught = false;
     // use local storage to find if pokemon is already caught
-    if (pokeName in caughtList) {
+    if (caughtList.includes(pokeName)) {
       isCaught = true;
     }
 
-    console.log(isCaught); // TODO this is incorrect
+    console.log(isCaught);
     // retrieve catch button from DOM
     const $toggleCatch = document.getElementById("toggleCatch");
     $toggleCatch.addEventListener("click", function (e) {
@@ -394,19 +394,33 @@ $library.addEventListener("click", async function (e) {
       if (isCaught) {
         catchPokemon(pokeName, pokeID);
         //change opacity to indicate
-        // modalContent.style.opacity = 0.5;
         modalContent.classList.add("opacity-50");
+        // add caught pokemon to list
+        const caught = createElement(
+          "li",
+          {
+            className: "list-group-item",
+          },
+          pokeName,
+        );
+        caught.id = 2 * pokeID;
+        $list.prepend(caught);
       } else {
         releasePokemon(pokeName, pokeID);
         modalContent.classList.remove("opacity-50");
-        // modalContent.style.opacity = 1;
+        // remove from list
+        const removeId = 2 * pokeID;
+        const remove = document.getElementById(removeId);
+        console.log(remove); //a correct node retrieved
+        $list.removeChild(remove);
+        console.log($list);
       }
       console.log(`list of caught ${caughtList}`); // this can be updated correctly
     });
   }
 });
 
-// displayList(); cannot put here.
+// displayList(); //cannot put here.
 
 // display a list of caught pokemons
 // caughtList = localStorage.getItem("caughtList")
