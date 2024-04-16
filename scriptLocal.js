@@ -269,20 +269,20 @@ function displayDetails(id, name) {
     className: id,
     id: "toggleCatch",
   });
-
+  $catchBtn.classList.add("btn");
   // use local storage data to determine button text
 
   // if pokemon is already caught
   if (caughtList.includes(name)) {
     // FIXED syntax is Arr.includes( any ), NOT  any in Arr
     $catchBtn.textContent = "Release";
-    $catchBtn.classList.remove("btn-danger", "catch"); // add visual cues
-    $catchBtn.classList.add("btn-success", "release"); //TODO text change work but Bootstrap button styling class not working
+    $catchBtn.classList.remove("btn-danger"); // add visual cues
+    $catchBtn.classList.add("btn-success"); // btn-success utility class was not working because forgot primary utility class btn
     modalContent.classList.add("opacity-50");
   } else {
     $catchBtn.textContent = "Catch";
-    $catchBtn.classList.remove("btn-success", "release"); // add visual cues
-    $catchBtn.classList.add("btn-danger", "catch");
+    $catchBtn.classList.remove("btn-success"); // add visual cues
+    $catchBtn.classList.add("btn-danger");
     modalContent.classList.remove("opacity-50");
   }
   // add child elements to the resulting element
@@ -381,6 +381,7 @@ $library.addEventListener("click", async function (e) {
     }
 
     console.log(isCaught);
+
     // retrieve catch button from DOM
     const $toggleCatch = document.getElementById("toggleCatch");
     $toggleCatch.addEventListener("click", function (e) {
@@ -395,6 +396,9 @@ $library.addEventListener("click", async function (e) {
         catchPokemon(pokeName, pokeID);
         //change opacity to indicate
         modalContent.classList.add("opacity-50");
+        // change button style
+        $toggleCatch.classList.remove("btn-danger");
+        $toggleCatch.classList.add("btn-success");
         // add caught pokemon to list
         const caught = createElement(
           "li",
@@ -408,6 +412,9 @@ $library.addEventListener("click", async function (e) {
       } else {
         releasePokemon(pokeName, pokeID);
         modalContent.classList.remove("opacity-50");
+        // change button style
+        $toggleCatch.classList.remove("btn-success");
+        $toggleCatch.classList.add("btn-danger");
         // remove from list
         const removeId = 2 * pokeID;
         const remove = document.getElementById(removeId);
@@ -429,3 +436,9 @@ $library.addEventListener("click", async function (e) {
 // correctly add and remove both on page and in local storage
 // const testList = ["catch1", "catch2"];
 // displayList(testList); // this function works
+
+// new idea refresh page on dialog closure
+// $("#myModal").on("hidden.bs.modal", function (e) {
+//   // do something...
+// location.reload()
+// });
