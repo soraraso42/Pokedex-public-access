@@ -1,7 +1,8 @@
+// =====initiate variables ====
 const $library = document.getElementById("pokemon-library");
 const $load = document.getElementById("load");
 const $list = document.getElementById("pokemon-list");
-//  local storage : data structure need 3 kv pairs
+// local storage : data structure need 3 kv pairs
 //get the next API call url, if empty set it to get the first 20
 let $next = "";
 
@@ -14,14 +15,15 @@ else {
     "https://pokeapi.co/api/v2/pokemon/?offset=0&limit=20",
   );
 } // first load
-// console.log(`initial $next is ${$next}`);
+
 // stores data about pokemons on page until explicit clear
+
 // initiate a holder variable for on-page display
 let tempArr = localStorage.getItem("gallery")
   ? JSON.parse(localStorage.getItem("gallery"))
   : [];
 
-// display a list of caught pokemons
+// initiate a list of caught pokemons
 let caughtList = localStorage.getItem("caughtList")
   ? JSON.parse(localStorage.getItem("caughtList"))
   : [];
@@ -29,11 +31,18 @@ let caughtList = localStorage.getItem("caughtList")
 let caughtListTemp = caughtList.map(JSON.stringify);
 let caughtListTemp2 = new Set(caughtListTemp);
 caughtList = Array.from(caughtListTemp2).map(JSON.parse);
+// console.log("caughtList after initialization is :\n");
+console.log(caughtList);
+
+// display caughtList
+// displayList(caughtList); // not the right place
 
 // store into local
 localStorage.setItem("caughtList", JSON.stringify(caughtList));
 
-// receives name of pokemon to catch , put banner on thumbnail
+// =====initiate functions ====
+
+// function receives name of pokemon to catch , put banner on thumbnail
 // and store name into local storage
 function catchPokemon(name, id) {
   const thumbnail = document.getElementById(`${id}`);
@@ -44,7 +53,9 @@ function catchPokemon(name, id) {
   }
   localStorage.setItem("caughtList", JSON.stringify(caughtList));
 }
-// receives name of pokemon to release and remove from local storage
+//
+
+// function receives name of pokemon to release and remove from local storage
 // and remove banner from thumbnail
 function releasePokemon(name, id) {
   const thumbnail = document.getElementById(`${id}`);
@@ -52,7 +63,9 @@ function releasePokemon(name, id) {
   caughtList.pop(name);
   localStorage.setItem("caughtList", JSON.stringify(caughtList));
 }
-// function to add an object from API to localArray // 20 objects inside
+//
+
+// function add an object from API to localArray // 20 objects inside
 function save($json, tempArr) {
   let json;
   // use concat
@@ -72,8 +85,9 @@ function save($json, tempArr) {
   // put array of unique objects to localStorage
   localStorage.setItem("gallery", JSON.stringify(uniqueArray)); //correctly stored as a string
 }
+//
 
-// emulate react framework with custom function return an element
+// function emulate react framework with custom function return an element
 function createElement(type, props, ...children) {
   const $el = document.createElement(type);
   // props is a js object
@@ -84,16 +98,40 @@ function createElement(type, props, ...children) {
   $el.append(...children);
   return $el;
 }
+//
 
-// return the Pokemon's id from the provided url
+// function return the Pokemon's id from the provided url
 function parseUrl(url) {
   return url.substring(
     url.substring(0, url.length - 2).lastIndexOf("/") + 1,
     url.length - 1,
   );
 }
+//
 
-// create a display for 20 pokemons from input array of pokemon objects
+// function retrieve caught list from storage, iterate and prepend to  list on page
+function displayList() {
+  // update the input list against local storage
+  // initiate a list of caught pokemons
+  let caughtList = localStorage.getItem("caughtList")
+    ? JSON.parse(localStorage.getItem("caughtList"))
+    : [];
+  // remove duplicates
+  let caughtListTemp = caughtList.map(JSON.stringify);
+  let caughtListTemp2 = new Set(caughtListTemp);
+  caughtList = Array.from(caughtListTemp2).map(JSON.parse);
+  console.log("caughtList inside displayList is :\n");
+  console.log(caughtList);
+  let ls = caughtList;
+  for (let c of ls) {
+    console.log(c);
+    const caught = createElement("li", { className: "list-group-item" }, c);
+    $list.prepend(caught);
+  }
+}
+//
+
+// function create a display for pokemons from input array of pokemon objects
 // and save input array to localStorage
 function displayPokemon(input) {
   // save gallery to localStorage
@@ -105,7 +143,7 @@ function displayPokemon(input) {
       src: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${parseUrl(p.url)}.png`,
       alt: ` thumbnail for ${p.name} `, // improve accessibility
     }); // insert smaller thumbnail according to pokemon id
-    $sprite.classList.add("figure-img", "img-fluid", "rounded");
+    $sprite.classList.add("figure-img", "img-fluid", "mt-3");
 
     // add caughtbanner // default hidden with d-none
     const $caughtBanner = createElement(
@@ -128,7 +166,11 @@ function displayPokemon(input) {
       "bg-danger",
       "opacity-75",
     );
+    // check if this pokemon is caught already
 
+    if (caughtList.includes(p.name)) {
+      $caughtBanner.classList.remove("d-none");
+    }
     const $spriteContainer = createElement(
       "div",
       { className: "spriteContainer" },
@@ -172,10 +214,83 @@ function displayPokemon(input) {
     );
 
     // add box to library
-    $library.prepend($box);
-    // console.log(" pokemon added")
+    $library.prepend($box); // changed from append to prepend such that user can see newly added pokemons without scrolling far
   }
 }
+//
+
+// function receives id and name returns a card-like element with larger image and 2 details
+// use a card template from bootstrap and use modal to display
+function displayDetails(id, name) {
+  const $detailBody = createElement("div", { className: "card-body" });
+  $detailBody.classList.add("text-center");
+  const $detailBox = createElement("div", {
+    className: "card",
+    id: "detailBox",
+  });
+  $detailBox.classList.add("border-0");
+  const $lgSprite = createElement("img", {
+    className: "pokemon-sprite-lg",
+    src: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`,
+  });
+  $lgSprite.classList.add("img-card-center", "img-fluid");
+  // display pokeName as card title
+  const $detailName = createElement("p", { className: "card-title" }, name);
+  $detailName.classList.add("display-4", "text-center");
+
+  // retrieve and display details with async
+  fetch(`https://pokeapi.co/api/v2/pokemon/${id}`) // this returns a promise
+    .then((response) => response.json())
+    // display base experience score and weight
+    /* .then(id => { console.log(id) })// this gives undefined because the parameters contained in the parsed json data need to be handled inside this function
+  // FIXED this data is not retrieved 
+  // const $weight = createElement('p',{className: 'card-text'}, `weight: ${weight.name}`) ;
+  / $detailBody.append($weight);    */
+    .then((data) => {
+      //console.log(data) // was returning undefined when prev line is console.log(response.json()) because the data parsed can be understood to be already passed to console.log() func
+      $weight = createElement(
+        "p",
+        { className: "card-text" },
+        `weight: ${data.weight}`,
+      );
+      $weight.classList.add("h3");
+      $experience = createElement(
+        "p",
+        { className: "card-text" },
+        `base experience: ${data.base_experience}`,
+      );
+      $experience.classList.add("h3");
+      // console.log($weight)
+      $detailBody.append($weight);
+      $detailBody.append($experience);
+    });
+  //  add toggle and initial text that is based on pokemon state
+  const $catchBtn = createElement("button", {
+    className: id,
+    id: "toggleCatch",
+  });
+
+  // use local storage data to determine button text
+
+  // if pokemon is already caught
+  if (name in caughtList) {
+    $catchBtn.textContent = "Release";
+    $catchBtn.classList.remove("btn-danger", "catch"); // add visual cues
+    $catchBtn.classList.add("btn-success", "release"); //TODO text change work but Bootstrap button styling class not working
+  } else {
+    $catchBtn.textContent = "Catch";
+    $catchBtn.classList.remove("btn-success", "release"); // add visual cues
+    $catchBtn.classList.add("btn-danger", "catch");
+  }
+  // add child elements to the resulting element
+  $detailBody.append($detailName);
+  $detailBody.append($catchBtn);
+  $detailBody.append($lgSprite);
+  $detailBox.append($detailBody);
+
+  return $detailBox;
+}
+//
 
 // if tempArr is empty fetch from beginning
 // else display from tempArr
@@ -209,7 +324,9 @@ if (tempArr.length == 0) {
     .catch((error) => console.error("Error fetching data:", error));
 } else {
   displayPokemon(tempArr);
-  // save this next url to local
+
+  // display caught list
+  displayList();
 
   // listen for user click on load more btn
   $load.addEventListener("click", function (e) {
@@ -226,79 +343,6 @@ if (tempArr.length == 0) {
         localStorage.setItem("next", $next); // store updated value to local
       }); // repeatedly load more
   });
-}
-
-// show detail
-// use a card template from bootstrap and use modal to display
-
-// receives id and name returns a card-like element with larger image and 2 details
-function displayDetails(id, name) {
-  const $detailBody = createElement("div", { className: "card-body" });
-  $detailBody.classList.add("text-center");
-  const $detailBox = createElement("div", {
-    className: "card",
-    id: "detailBox",
-  });
-  const $lgSprite = createElement("img", {
-    className: "pokemon-sprite-lg",
-    src: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`,
-  });
-  $lgSprite.classList.add("img-card-center");
-  // display pokeName as card title
-  const $detailName = createElement("p", { className: "card-title" }, name);
-  $detailName.classList.add("h3", "text-center");
-
-  // retrieve and display details with async
-  fetch(`https://pokeapi.co/api/v2/pokemon/${id}`) // this returns a promise
-    .then((response) => response.json())
-    // display base experience score and species
-    /* .then(id => { console.log(id) })// this gives undefined because the parameters contained in the parsed json data need to be handled inside this function
-  // FIXED this data is not retrieved 
-  // const $species = createElement('p',{className: 'card-text'}, `species: ${species.name}`) ;
-  / $detailBody.append($species);    */
-    .then((data) => {
-      //console.log(data) // was returning undefined when prev line is console.log(response.json()) because the data parsed can be understood to be already passed to console.log() func
-      $species = createElement(
-        "p",
-        { className: "card-text" },
-        `species: ${data.species.name}`,
-      );
-      $species.classList.add("text-info");
-      $experience = createElement(
-        "p",
-        { className: "card-text" },
-        `base experience: ${data.base_experience}`,
-      );
-      $experience.classList.add("text-info");
-      // console.log($species)
-      $detailBody.append($species);
-      $detailBody.append($experience);
-    });
-  //  add toggle and initial text that is based on pokemon state
-  const $catchBtn = createElement("button", {
-    className: id,
-    id: "toggleCatch",
-  });
-
-  // use local storage data to determine button text
-
-  // if pokemon is already caught
-  if (name in caughtList) {
-    $catchBtn.textContent = "Release";
-    $catchBtn.classList.remove("btn-danger", "catch"); // add visual cues
-    $catchBtn.classList.add("btn-success", "release"); //TODO text change work but Bootstrap button styling class not working
-  } else {
-    $catchBtn.textContent = "Catch";
-    $catchBtn.classList.remove("btn-success", "release"); // add visual cues
-    $catchBtn.classList.add("btn-danger", "catch");
-  }
-  // add child elements to the resulting element
-  $detailBody.append($detailName);
-  $detailBody.append($catchBtn);
-  $detailBody.append($lgSprite);
-  $detailBox.append($detailBody);
-
-  return $detailBox;
 }
 
 // listen for click event on pokemon thumnail using event delegation
@@ -324,9 +368,9 @@ $library.addEventListener("click", async function (e) {
 
     // Show the Bootstrap modal
     const modal = new bootstrap.Modal(document.getElementById("pokemonModal"));
+
     modal.show();
 
-    // listen for user action
     let isCaught = false;
     // use local storage to find if pokemon is already caught
     if (pokeName in caughtList) {
@@ -347,27 +391,24 @@ $library.addEventListener("click", async function (e) {
       if (isCaught) {
         catchPokemon(pokeName, pokeID);
         //change opacity to indicate
-        modalContent.style.opacity = 0.5;
+        // modalContent.style.opacity = 0.5;
+        modalContent.classList.add("opacity-50");
       } else {
         releasePokemon(pokeName, pokeID);
-        modalContent.style.opacity = 1;
+        modalContent.classList.remove("opacity-50");
+        // modalContent.style.opacity = 1;
       }
       console.log(`list of caught ${caughtList}`); // this can be updated correctly
     });
   }
 });
 
+// displayList(); cannot put here.
+
 // display a list of caught pokemons
 // caughtList = localStorage.getItem("caughtList")
 //   ? JSON.parse(localStorage.getItem("caughtList"))
 //   : [];
 // correctly add and remove both on page and in local storage
-
-// TODO where to execute this
-// after the user decides on catch/release
-// iterate over array and put in list
-// for (let c of caughtList) {
-//   console.log(c);
-//   const caught = createElement("li", { className: "list-group-item" }, c);
-//   $list.append(caught);
-// }
+// const testList = ["catch1", "catch2"];
+// displayList(testList); // this function works
