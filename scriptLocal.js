@@ -105,7 +105,7 @@ function displayPokemon(input) {
       src: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${parseUrl(p.url)}.png`,
       alt: ` thumbnail for ${p.name} `, // improve accessibility
     }); // insert smaller thumbnail according to pokemon id
-    $sprite.classList.add("figure-img", "img-fluid", "rounded", "pokemon");
+    $sprite.classList.add("figure-img", "img-fluid", "rounded");
 
     // add caughtbanner // default hidden with d-none
     const $caughtBanner = createElement(
@@ -143,7 +143,7 @@ function displayPokemon(input) {
       { className: "pokemon-name" },
       p.name,
     );
-    $name.classList.add("text-center", "d-3", "py-auto", "mb-2"); // TODO text-center class is added but not taking effect
+    $name.classList.add("text-center", "d-3", "py-auto", "mb-4");
     // put face and pokemon in display box
     const $box = createElement(
       "figure",
@@ -156,9 +156,9 @@ function displayPokemon(input) {
     $box.setAttribute("data-bs-target", "#detailBox");
     $box.classList.add(
       "pokemon-box",
-      "col-6",
-      "col-md-4",
-      "col-lg-3",
+      "col-4",
+      "col-md-3",
+      "col-lg-2",
       "justify-content-center",
       "text-center",
       "figure",
@@ -172,7 +172,7 @@ function displayPokemon(input) {
     );
 
     // add box to library
-    $library.append($box);
+    $library.prepend($box);
     // console.log(" pokemon added")
   }
 }
@@ -333,7 +333,7 @@ $library.addEventListener("click", async function (e) {
       isCaught = true;
     }
 
-    console.log(isCaught);
+    console.log(isCaught); // TODO this is incorrect
     // retrieve catch button from DOM
     const $toggleCatch = document.getElementById("toggleCatch");
     $toggleCatch.addEventListener("click", function (e) {
@@ -352,7 +352,7 @@ $library.addEventListener("click", async function (e) {
         releasePokemon(pokeName, pokeID);
         modalContent.style.opacity = 1;
       }
-      console.log(`list of caught ${caughtList}`);
+      console.log(`list of caught ${caughtList}`); // this can be updated correctly
     });
   }
 });
