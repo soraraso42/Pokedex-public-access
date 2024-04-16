@@ -273,14 +273,17 @@ function displayDetails(id, name) {
   // use local storage data to determine button text
 
   // if pokemon is already caught
-  if (name in caughtList) {
+  if (caughtList.includes(name)) {
+    // FIXED syntax is Arr.includes( any ), NOT  any in Arr
     $catchBtn.textContent = "Release";
     $catchBtn.classList.remove("btn-danger", "catch"); // add visual cues
     $catchBtn.classList.add("btn-success", "release"); //TODO text change work but Bootstrap button styling class not working
+    modalContent.classList.add("opacity-50");
   } else {
     $catchBtn.textContent = "Catch";
     $catchBtn.classList.remove("btn-success", "release"); // add visual cues
     $catchBtn.classList.add("btn-danger", "catch");
+    modalContent.classList.remove("opacity-50");
   }
   // add child elements to the resulting element
   $detailBody.append($detailName);
