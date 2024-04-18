@@ -242,13 +242,13 @@ function displayDetails(id, name) {
         { className: "card-text" },
         `weight: ${data.weight}`,
       );
-      $weight.classList.add("h3");
+      $weight.classList.add("h4");
       $experience = createElement(
         "p",
         { className: "card-text" },
         `base experience: ${data.base_experience}`,
       );
-      $experience.classList.add("h3");
+      $experience.classList.add("h4");
       // console.log($weight)
       $detailBody.append($weight);
       $detailBody.append($experience);
@@ -258,7 +258,7 @@ function displayDetails(id, name) {
     className: id,
     id: "toggleCatch",
   });
-  $catchBtn.classList.add("btn");
+  $catchBtn.classList.add("btn", "btn-lg");
   // use local storage data to determine button text
 
   // if pokemon is already caught
