@@ -222,7 +222,7 @@ function displayDetails(id, name) {
     className: "pokemon-sprite-lg",
     src: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`,
   });
-  $lgSprite.classList.add("img-card-center", "img-fluid");
+  $lgSprite.classList.add("img-card-center", "img-fluid", "my-0");
   // display pokeName as card title
   const $detailName = createElement("p", { className: "card-title" }, name);
   $detailName.classList.add("display-4", "text-center");
