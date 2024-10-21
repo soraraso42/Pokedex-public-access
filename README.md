@@ -1,43 +1,75 @@
-# Pokedex
+# Pokedex Project
 
+This Pokedex is a dynamic, client-side web application that displays information about various Pokemon using data retrieved from the [PokeAPI](https://pokeapi.co/). The application allows users to view Pokemon details, "catch" and "release" Pokemon, and store the current state of caught Pokemon in the browser using **localStorage**. 
 
-## Overview
+## Features
 
-An interactive Pokedex web application using [PokeApi](https://pokeapi.co) that allows users to choose to load more Pokemon, view details about a specific Pokemon, "catch" and "release" specific Pokemons.
+- **View Pokemon Gallery**: The homepage loads a gallery of Pokemon using data fetched from PokeAPI. Users can scroll through an infinite list of Pokemon by clicking the "Load More" button, which fetches additional data in batches.
+- **Pokemon Details Modal**: Users can click on any Pokemon to view a detailed modal, which displays the Pokemon's name, image, weight, and base experience.
+- **Catch & Release**: Users can "catch" Pokemon by toggling the catch button in the modal. The caught Pokemon are stored locally and indicated with a badge on their gallery thumbnail.
+- **Persistent Data**: Using localStorage, the application saves the state of caught Pokemon and fetched Pokemon, allowing users to leave the page and return without losing their data.
 
 ## Technology Stack
 
-RESTful APIs, javaScript, Bootstrap
+- **JavaScript (ES6)**: Handles asynchronous requests, DOM manipulation, and user interaction.
+- **HTML5/CSS3**: For layout and styling.
+- **Bootstrap**: Ensures a responsive layout and consistent UI elements, such as modals and buttons.
+- **PokeAPI**: RESTful API providing the data for Pokemon.
 
-## Key functionality
+## How It Works
 
-Using Async callback functions in javaScript to call the Pokedex API 
-parse retried JSON data to display names, heights, sizes and two images of each pokemon
-A local variable is used to ensure the next request start on the end of the prior request (implement caching without a wrapper library)
-a grid layout is used to ensure responsive user experience
-boostrap classes are used to ensure consistent display and clear/unambiguous user feedback such as classes and btn-danger btn-success
+1. **Fetching Data**:
+    - The Pokedex fetches Pokemon data using the PokeAPI's `/pokemon` endpoint. Each request retrieves 20 Pokemon, and users can load more by clicking the "Load More" button, which fetches the next batch.
+    - The fetched Pokemon data is displayed as cards in the gallery, including a sprite image and the Pokemon's name.
+
+2. **Displaying Pokemon Details**:
+    - When a Pokemon card is clicked, its details (e.g., weight, base experience) are fetched using a separate API call based on the Pokemon's ID.
+    - A Bootstrap modal displays these details dynamically, allowing the user to "catch" or "release" the Pokemon.
+
+3. **Catch and Release Mechanism**:
+    - Users can toggle between catching or releasing a Pokemon. If caught, a red "Caught" badge is shown on the Pokemon's gallery thumbnail, and the Pokemon is added to a list displayed in the sidebar.
+    - The catch/release state is stored in the browser’s **localStorage**, ensuring that the user's caught Pokemon list persists even after refreshing or closing the page.
+
+4. **Persistent State with LocalStorage**:
+    - **Caught Pokemon**: A list of caught Pokemon is saved in localStorage, which is retrieved and displayed whenever the page is loaded.
+    - **Fetched Pokemon**: To avoid redundant API calls, fetched Pokemon data is stored locally and only new Pokemon batches are requested as needed.
+
+## Project Structure
+
+```
+├── index.html        # Main HTML file that loads the Pokedex
+├── script.js         # Core JavaScript logic for fetching and displaying Pokemon
+├── style.css         # Custom CSS for additional styling
+
+```
+
+### Functions Overview
+
+- **`catchPokemon(name, id)`**: Marks a Pokemon as caught by adding it to the local storage and updating the UI with a "Caught" badge.
+- **`releasePokemon(name, id)`**: Removes a Pokemon from the caught list and updates the UI by removing the badge.
+- **`displayPokemon(input)`**: Renders the gallery of Pokemon by creating HTML elements dynamically and attaching them to the DOM.
+- **`displayDetails(id, name)`**: Fetches and displays detailed information about a Pokemon in a modal.
+- **`save(json, tempArr)`**: Saves the fetched Pokemon data to localStorage to prevent redundant API calls.
 
 ## Workflow
 
-- start by looking at manual page of Pokedex to understand the structure of the JSON data in the API call response
-- decide what detailed info of a pokemon to display to user as there are hundreds of features of each Pokemon
-- decided on name, height and size as theses are highly relevant attributes to Pokemon hunters , aka, my users
-- two size images are chosen: one for thumbnail display in library view; a larger one for detailed display when a user clicks on it.
-- test to ensure I have identifed the correct keys to retrieve the textual and img url information I will need
-- implement basic layout of 50 cards in a grid library layout with bootstrap card classes
-- using a for loop to populate each card with info from retrieved JSON 
-- use eventListener to implement the click to view details, catch and release functionality
-- use dialog to display a larger image of Pokemon
-- using localStorage to cache status of caught Pokemons
+1. **API Exploration**: The first step was to explore the [PokeAPI documentation](https://pokeapi.co/docs/v2) to understand the data structure and endpoints for retrieving Pokemon details.
+2. **HTML and Bootstrap Setup**: Created the basic layout using HTML5 and integrated Bootstrap for quick styling and responsiveness.
+3. **Fetching Pokemon Data**: Implemented async functions to fetch Pokemon data from the API in batches of 20 and display them dynamically in the gallery.
+4. **Modal for Pokemon Details**: Created a Bootstrap modal that dynamically displays a Pokemon's detailed information, such as weight, base experience, and an official artwork.
+5. **Catch and Release Feature**: Added functionality to mark Pokemon as caught or released, with localStorage to persist this state across sessions.
+6. **Testing and Debugging**: Throughout development, I fixed issues related to asynchronous data loading, handling localStorage, and displaying unique items without duplication.
 
-## Challenges and Learnings
+## Challenges
 
-- implement async API calls repeatedly was difficult, especially starting from where the previous call ended part. Trial and error before correctly using what the API provides to "remember"
-- position of script containing callback functions should be after the DOM loaded or using delay attribute in the script tag if placing it earlier
-- struggled with implementing the dialog function
-- grid layout
+- **Managing Asynchronous API Calls**: It was initially challenging to manage the sequence of API requests, especially when loading additional Pokemon or fetching detailed information on user interaction. Using promises (`.then()` and `async/await`) helped solve this issue.
+- **State Persistence**: Ensuring that the list of caught Pokemon and the currently fetched Pokemon data persisted between page reloads required careful use of localStorage.
+- **UI Consistency**: Dynamically updating the UI to reflect the catch/release state across both the gallery and modal views required manipulating DOM elements effectively.
 
 ## Future Improvements
-- can implement a search function that allows user to search for a given specs of a Pokemon, provided the user already knows what the spec is called. It can be implemented by simply using the query as a key
-- can implement a compare function where specs of two chosen Pokemon are displayed side by side for comparison. The comparison can be a table within a dialog. 
+
+- **Search Functionality**: Add a search bar that allows users to look for specific Pokemon by name or type.
+- **Filtering and Sorting**: Introduce filters to sort Pokemon by attributes such as weight, height, or experience.
+- **Lazy Loading for Performance**: Improve the gallery's performance by implementing lazy loading for images, so only the visible Pokemon images are fetched and rendered initially.
+- **Error Handling**: Implement more robust error handling for API requests, including user feedback when the API is down or the request fails.
 
