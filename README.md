@@ -39,6 +39,7 @@ This Pokedex is a dynamic, client-side web application that displays information
 ```
 ├── index.html        # Main HTML file that loads the Pokedex
 ├── script.js         # Core JavaScript logic for fetching and displaying Pokemon
+├── scriptLocal.js    # development version for debugging and testing
 ├── style.css         # Custom CSS for additional styling
 
 ```
