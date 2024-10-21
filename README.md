@@ -1,6 +1,8 @@
 # Pokedex Project
 
-This Pokedex is a dynamic, client-side web application that displays information about various Pokemon using data retrieved from the [PokeAPI](https://pokeapi.co/) and emulated React framework with vanilla javaScript. The application allows users to view Pokemon details, "catch" and "release" Pokemon, and store the current state of caught Pokemon in the browser using **localStorage**. 
+This Pokedex is a dynamic, client-side web application that displays information about various Pokemon using data retrieved from the [PokeAPI](https://pokeapi.co/) and emulated **React** framework with vanilla javaScript. The application allows users to view Pokemon details, "catch" and "release" Pokemon, and store the current state of caught Pokemon in the browser using **localStorage**. 
+
+![ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/f8a8ca42-a707-4733-814b-ad82d30b0b13)
 
 ## Features
 
