@@ -72,7 +72,5 @@ This Pokedex is a dynamic, client-side web application that displays information
 ## Future Improvements
 
 - **Search Functionality**: Add a search bar that allows users to look for specific Pokemon by name or type.
-- **Filtering and Sorting**: Introduce filters to sort Pokemon by attributes such as weight, height, or experience.
-- **Lazy Loading for Performance**: Improve the gallery's performance by implementing lazy loading for images, so only the visible Pokemon images are fetched and rendered initially.
-- **Error Handling**: Implement more robust error handling for API requests, including user feedback when the API is down or the request fails.
+- **Release from list**: Allow release of caught pokemon from display list
 
